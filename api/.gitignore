@@ -1,0 +1,19 @@
+# package directories
+node_modules
+jspm_packages
+coverage
+
+# production
+build
+dist
+
+# Misc
+.DS_Store
+.eslintcache
+**/.DS_Store
+
+# Environment variables
+.env
+.env.dev
+.env.prod
+**/dist
