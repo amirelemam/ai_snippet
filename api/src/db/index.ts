@@ -1,38 +1,43 @@
 import mongoose from 'mongoose';
 import logger from '../common/logger';
 
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
+class DatabaseConnection {
+    private static instance: typeof mongoose | null = null;
+
+    static async connect() {
+        if (this.instance) {
+            return this.instance;
+        }
+
+        try {
+            this.instance = await mongoose.connect(process.env.DATABASE_URL!, {
+                maxPoolSize: process.env.DB_MAX_POOL_SIZE ? parseInt(process.env.DB_MAX_POOL_SIZE) : 10,
+                minPoolSize: process.env.DB_MIN_POOL_SIZE ? parseInt(process.env.DB_MIN_POOL_SIZE) : 2,
+                socketTimeoutMS: process.env.DB_SOCKET_TIMEOUT_MS ? parseInt(process.env.DB_SOCKET_TIMEOUT_MS) : 45000,
+                serverSelectionTimeoutMS: process.env.DB_SERVER_SELECTION_TIMEOUT_MS ? parseInt(process.env.DB_SERVER_SELECTION_TIMEOUT_MS) : 5000,
+            });
+
+            // Log connection success
+            logger.info('MongoDB connected successfully');
+
+            // Optional: Handle disconnection
+            mongoose.connection.on('disconnected', () => {
+                logger.info('MongoDB disconnected');
+            });
+
+            return this.instance;
+        } catch (error) {
+            logger.error('MongoDB connection error:', error);
+            throw error;
+        }
+    }
+
+    static async disconnect() {
+        if (this.instance) {
+            await mongoose.disconnect();
+            this.instance = null;
+        }
+    }
 }
 
-let connection: typeof mongoose | null = null;
-
-const connectDB = async (skipIfNoUrl = false) => {
-    try {
-        if (!process.env.DATABASE_URL) {
-            if (skipIfNoUrl) {
-                logger.warn(
-                    'DATABASE_URL not set, skipping database connection',
-                );
-                return null;
-            }
-            throw new Error('DATABASE_URL is not set');
-        }
-        connection = await mongoose.connect(process.env.DATABASE_URL as string);
-        logger.info(`MongoDB connected: ${connection.connection.host}`);
-        return connection;
-    } catch (err) {
-        logger.error('MongoDB connection error:', err);
-        throw err;
-    }
-};
-
-const disconnectDB = async () => {
-    if (connection) {
-        await connection.disconnect();
-        connection = null;
-        logger.info('MongoDB disconnected');
-    }
-};
-
-export { connectDB, disconnectDB };
+export default DatabaseConnection;

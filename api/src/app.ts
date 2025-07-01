@@ -5,10 +5,9 @@ import morgan from 'morgan';
 import logger from './common/logger';
 import routes from './routes';
 import { NotFoundError } from './common/errors';
-import { HttpException } from './common/httpException';
-import { connectDB } from './db';
+import { HttpException } from './common/http-exception';
+import './db';
 
-connectDB();
 const app = express();
 
 const port = Number(process.env.PORT) || 8080;
