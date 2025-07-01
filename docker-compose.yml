@@ -1,0 +1,40 @@
+networks:
+  api_snippet_service:
+
+services:
+  api_snippet:
+    container_name: api_snippet
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: npm start
+    ports:
+      - 8080:8080
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - DATABASE_URL=mongodb://mongo:27017/api_snippet
+    networks:
+      - api_snippet_service
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:4.4
+    container_name: mongo
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=api_snippet
+    networks:
+      - api_snippet_service
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+    driver: local

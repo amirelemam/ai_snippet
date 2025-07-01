@@ -3,7 +3,7 @@
 ### Requirements
 
 - Node.js 22+  
-- MongoDB 8+  
+- MongoDB 4
 - Docker
 
 ### Environment Variables
