@@ -3,14 +3,6 @@ import app from '../../../../app';
 import Snippet from '../../../../db/models/snippet.model';
 import { generateSummary } from '../../../../llm/providers/openai/openai-service';
 
-// Mock the snippet repository
-jest.mock('../../../../components/snippets/repository', () => ({
-    create: jest.fn((data) => {
-        // Simulate a successful creation with a mock ID
-        return Promise.resolve('mock-snippet-id');
-    }),
-}));
-
 // Mock the LLM summary generation
 jest.mock('../../../../llm/providers/openai/openai-service', () => ({
     generateSummary: jest.fn(),
@@ -37,13 +29,17 @@ describe('POST /api/snippets', () => {
 
         // Verify the response
         expect(response.body).toBeTruthy();
-        expect(response.body).toHaveProperty('id');
+        expect(response.body).toHaveProperty('_id');
 
         // Verify the summary generation was called
-        expect(generateSummary).toHaveBeenCalledWith(snippetData.text);
+        expect(generateSummary).toHaveBeenCalledWith({
+            text: snippetData.text,
+        });
 
         // Verify the snippet was saved in the database
-        const savedSnippet = await Snippet.findById(response.body.id);
+        const savedSnippet = await Snippet.findById(response.body._id);
+        console.log('savedSnippet', savedSnippet);
+
         expect(savedSnippet).toBeTruthy();
         expect(savedSnippet?.text).toBe(snippetData.text);
         expect(savedSnippet?.summary).toBe(mockSummary);
@@ -80,5 +76,9 @@ describe('POST /api/snippets', () => {
             .expect(400);
 
         expect(response.body).toHaveProperty('error');
+        expect(response.body.error[0]).toHaveProperty(
+            'message',
+            'Text must be at least 1 character long',
+        );
     });
 });
