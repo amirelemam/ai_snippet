@@ -6,7 +6,9 @@ import logger from './common/logger';
 import routes from './routes';
 import { NotFoundError } from './common/errors';
 import { HttpException } from './common/http-exception';
-import './db';
+import DatabaseConnection from './db';
+
+DatabaseConnection.connect();
 
 const app = express();
 
