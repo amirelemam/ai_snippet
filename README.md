@@ -167,6 +167,7 @@ UI:
 - Add Favicon
 - Make it mobile-friendly 
 - Replace CSS inline with classes  
+- Notification on successful / failed snippet creation
 
 ### Trade-offs
 
