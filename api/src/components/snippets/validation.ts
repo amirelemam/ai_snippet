@@ -10,10 +10,28 @@ const createSchema = z.object({
         .min(1, { message: 'Text must be at least 1 character long' }),
 });
 
-const validate = (schema: z.ZodObject<any>) => {
+const getByIdSchema = z.object({
+    id: z.string().refine((val) => /^[0-9a-fA-F]{24}$/.test(val), {
+        message: 'Invalid snippet ID format',
+    }),
+});
+
+const validate = (schemas: {
+    body?: z.ZodObject<any>;
+    params?: z.ZodObject<any>;
+}) => {
     return (req: Request, res: Response, next: NextFunction): void => {
         try {
-            schema.parse(req.body);
+            // Validate body if schema provided
+            if (schemas.body) {
+                schemas.body.parse(req.body);
+            }
+
+            // Validate params if schema provided
+            if (schemas.params) {
+                schemas.params.parse(req.params);
+            }
+
             next();
         } catch (error) {
             if (error instanceof z.ZodError) {
@@ -33,5 +51,6 @@ const validate = (schema: z.ZodObject<any>) => {
 };
 
 export default {
-    create: validate(createSchema),
+    create: validate({ body: createSchema }),
+    getById: validate({ params: getByIdSchema }),
 };

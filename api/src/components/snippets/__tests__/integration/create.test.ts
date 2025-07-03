@@ -38,7 +38,6 @@ describe('POST /api/snippets', () => {
 
         // Verify the snippet was saved in the database
         const savedSnippet = await Snippet.findById(response.body._id);
-        console.log('savedSnippet', savedSnippet);
 
         expect(savedSnippet).toBeTruthy();
         expect(savedSnippet?.text).toBe(snippetData.text);

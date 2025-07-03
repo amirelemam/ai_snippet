@@ -31,4 +31,17 @@ router.post(
     },
 );
 
+router.get(
+    '/:id',
+    validation.getById,
+    async (req: Request, res: Response): Promise<void> => {
+        const snippet = await controller.getById(req.params.id);
+        if (!snippet) {
+            res.status(404).json({ error: 'Snippet not found' });
+            return;
+        }
+        res.status(200).json(snippet);
+    },
+);
+
 export default router;

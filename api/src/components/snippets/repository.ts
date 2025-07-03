@@ -32,6 +32,11 @@ const create = async (snippetData: ISnippet): Promise<ISnippet> => {
     }
 };
 
+const getById = async (id: string): Promise<ISnippet | null> => {
+    return await Snippet.findById(id);
+};
+
 export default {
     create,
+    getById,
 };

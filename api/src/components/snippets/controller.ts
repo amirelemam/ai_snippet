@@ -18,6 +18,11 @@ const create = async (snippet: ISnippet): Promise<ISnippet | null> => {
     }
 };
 
+const getById = async (id: string): Promise<ISnippet | null> => {
+    return await services.getById(id);
+};
+
 export default {
     create,
+    getById,
 };

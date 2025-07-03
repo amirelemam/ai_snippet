@@ -42,10 +42,7 @@ describe('GET /api/snippets/:id', () => {
 
         // Verify error response
         expect(response.body).toHaveProperty('error');
-        expect(response.body.error[0]).toHaveProperty(
-            'message',
-            'Snippet not found',
-        );
+        expect(response.body.error).toBe('Snippet not found');
     });
 
     it('should return 400 for invalid ID format', async () => {
