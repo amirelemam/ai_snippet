@@ -22,7 +22,16 @@ const getById = async (id: string): Promise<ISnippet | null> => {
     return await services.getById(id);
 };
 
+const getAll = async (query: {
+    page: number;
+    limit: number;
+}): Promise<ISnippet[]> => {
+    const { page = 1, limit = 10 } = query;
+    return await services.getAll({page, limit});
+};
+
 export default {
     create,
     getById,
+    getAll,
 };

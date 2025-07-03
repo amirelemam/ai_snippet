@@ -1,24 +1,147 @@
 ## AI Snippet
 
-### Install
+### Prerequisites
 
-- Node.js 22+  
+- Node.js 22+
 - MongoDB 4
 - Docker
+- OpenAI API Key
+
+### Installation
+
+#### Local Setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   cd api
+   npm install
+   ```
+3. Create a `.env` file with the following variables:
+   ```
+   DATABASE_URL=mongodb://localhost:27017/ai-snipper
+   OPENAI_API_KEY=your_openai_api_key_here
+   ```
+
+#### Docker Setup
+
+1. Ensure Docker and Docker Compose are installed
+2. Create a `.env` file as described above
+3. Run:
+   ```bash
+   docker-compose up --build
+   ```
 
 ### Environment Variables
 
 **Required**
-- DATABASE_URL: MongoDB connection string
-- OPENAI_KEY: OpenAI API key
+
+- `DATABASE_URL`: MongoDB connection string
+- `OPENAI_API_KEY`: OpenAI API key for generating summaries
 
 **Optional**
-- PORT: default 8080
-- LOG_LEVEL: error, warn, info, http, verbose, debug or silly (Default "debug")
-- DB_MAX_POOL_SIZE: default 10
-- DB_MIN_POOL_SIZE: default 1
-- DB_SOCKET_TIMEOUT_MS: default 45000
-- DB_SERVER_SELECTION_TIMEOUT_MS: default 5000
+
+- `PORT`: Server port (default: 8080)
+- `LOG_LEVEL`: Logging level (default: "debug")
+  - Options: error, warn, info, http, verbose, debug, silly
+- `DB_MAX_POOL_SIZE`: MongoDB max connection pool size (default: 10)
+- `DB_MIN_POOL_SIZE`: MongoDB min connection pool size (default: 1)
+- `DB_SOCKET_TIMEOUT_MS`: MongoDB socket timeout (default: 45000)
+- `DB_SERVER_SELECTION_TIMEOUT_MS`: MongoDB server selection timeout (default: 5000)
+
+### API Endpoints
+
+#### Create Snippet
+
+- **URL**: `/api/snippets`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "text": "Your code snippet text"
+  }
+  ```
+- **Success Response**:
+  - **Code**: 201
+  - **Content**:
+    ```json
+    {
+      "_id": "snippet_id",
+      "text": "Your code snippet text",
+      "summary": "AI-generated summary"
+    }
+    ```
+- **Error Responses**:
+  - **Code**: 400 (Invalid input)
+  - **Code**: 500 (Server error)
+
+#### Get Snippet by ID
+
+- **URL**: `/api/snippets/:id`
+- **Method**: `GET`
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    {
+      "_id": "snippet_id",
+      "text": "Your code snippet text",
+      "summary": "AI-generated summary"
+    }
+    ```
+- **Error Responses**:
+  - **Code**: 404 (Snippet not found)
+  - **Code**: 400 (Invalid ID format)
+
+#### Get All Snippets
+
+- **URL**: `/api/snippets`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `page` (optional, default: 1)
+  - `limit` (optional, default: 10)
+- **Success Response**:
+  - **Code**: 200
+  - **Content**:
+    ```json
+    [
+      {
+        "_id": "snippet_id_1",
+        "text": "First snippet text",
+        "summary": "First snippet summary"
+      },
+      {
+        "_id": "snippet_id_2",
+        "text": "Second snippet text",
+        "summary": "Second snippet summary"
+      }
+    ]
+    ```
+
+### Running Tests
+
+#### Local Testing
+
+```bash
+cd api
+npm test
+```
+
+#### Docker Testing
+
+```bash
+docker-compose run api npm test
+```
+
+### Obtaining API Keys
+
+#### OpenAI API Key
+
+1. Visit [OpenAI Platform](https://platform.openai.com/)
+2. Create an account or log in
+3. Navigate to API Keys section
+4. Generate a new secret key
+5. Copy the key and use it in the `OPENAI_API_KEY` environment variable
 
 ### License
 

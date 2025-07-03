@@ -9,7 +9,12 @@ const getById = async (id: string): Promise<ISnippet | null> => {
     return await repository.getById(id);
 };
 
+const getAll = async ({page, limit}: {page: number, limit: number}): Promise<ISnippet[]> => {
+    return await repository.getAll({page, limit});
+};
+
 export default {
     create,
     getById,
+    getAll,
 };

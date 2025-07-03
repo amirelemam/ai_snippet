@@ -16,9 +16,27 @@ const getByIdSchema = z.object({
     }),
 });
 
+const getAllSchema = z
+    .object({
+        page: z.coerce
+            .number()
+            .int()
+            .min(1, { message: 'Invalid pagination parameters' })
+            .optional()
+            .default(1),
+        limit: z.coerce
+            .number()
+            .int()
+            .min(1, { message: 'Invalid pagination parameters' })
+            .optional()
+            .default(10),
+    })
+    .strict();
+
 const validate = (schemas: {
     body?: z.ZodObject<any>;
     params?: z.ZodObject<any>;
+    query?: z.ZodObject<any>;
 }) => {
     return (req: Request, res: Response, next: NextFunction): void => {
         try {
@@ -30,6 +48,11 @@ const validate = (schemas: {
             // Validate params if schema provided
             if (schemas.params) {
                 schemas.params.parse(req.params);
+            }
+
+            // Validate query if schema provided
+            if (schemas.query) {
+                schemas.query.parse(req.query);
             }
 
             next();
@@ -53,4 +76,5 @@ const validate = (schemas: {
 export default {
     create: validate({ body: createSchema }),
     getById: validate({ params: getByIdSchema }),
+    getAll: validate({ query: getAllSchema }),
 };

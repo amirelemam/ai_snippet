@@ -44,4 +44,22 @@ router.get(
     },
 );
 
+router.get(
+    '/',
+    validation.getAll,
+    async (req: Request, res: Response): Promise<void> => {
+        const { page, limit } = req.query;
+
+        // Ensure page and limit are numbers
+        const pageNum = typeof page === 'string' ? parseInt(page, 10) : 1;
+        const limitNum = typeof limit === 'string' ? parseInt(limit, 10) : 10;
+
+        const snippets = await controller.getAll({
+            page: pageNum,
+            limit: limitNum,
+        });
+        res.status(200).json(snippets);
+    },
+);
+
 export default router;

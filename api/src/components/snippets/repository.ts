@@ -36,7 +36,12 @@ const getById = async (id: string): Promise<ISnippet | null> => {
     return await Snippet.findById(id);
 };
 
+const getAll = async ({page, limit}: {page: number, limit: number}): Promise<ISnippet[]> => {
+    return await Snippet.find().skip((page - 1) * limit).limit(limit);
+};
+
 export default {
     create,
     getById,
+    getAll,
 };
