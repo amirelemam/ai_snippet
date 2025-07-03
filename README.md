@@ -148,6 +148,33 @@ npm test
     ]
     ```
 
+### Improvements 
+
+API:
+- Treat LLM response
+- Define min quantity of words for summarization
+- Filter snippets by date or period
+- Unit tests
+- Authentication (sign up, sign In)
+- User Roles
+- Github Actions
+- AI summary with SSE
+- Add features: delete and edit snippets, search by content
+
+UI: 
+- Add pagination to list of snippets
+- Automated tests
+- Add Favicon
+- Make it mobile-friendly 
+- Replace CSS inline with classes  
+
+### Trade-offs
+
+- Usage of Next instead of Remix due to learning curve
+- Tailwind: quicker development, but with more cluttered files
+- Test with in-memory Mongo: isolation and simulates mongo, however uses a lot of RAM memory
+- Singleton for Logger and DB connection: single instance, but they are immutable after initialization
+
 ### License
 
 Licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

@@ -17,10 +17,8 @@ class DatabaseConnection {
                 serverSelectionTimeoutMS: process.env.DB_SERVER_SELECTION_TIMEOUT_MS ? parseInt(process.env.DB_SERVER_SELECTION_TIMEOUT_MS) : 5000,
             });
 
-            // Log connection success
             logger.info('MongoDB connected successfully');
 
-            // Optional: Handle disconnection
             mongoose.connection.on('disconnected', () => {
                 logger.info('MongoDB disconnected');
             });
