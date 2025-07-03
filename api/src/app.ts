@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -38,17 +38,14 @@ app.use('/api/', routes);
 
 app.use((err: HttpException, req: Request, res: Response): void => {
     if (err) {
-        if (err.stack) logger.error(err.stack);
-        if (!err.status) {
-            res.status(500).json();
-            return;
-        }
-        res.status(err.status).send({ error: err.message });
+        logger.error(`Error: ${JSON.stringify(err)}`);
+      
+        if (!err.status) res.status(500).json({ error: 'Internal server error' });
+        else res.status(err.status).send({ error: err.message });
         return;
     }
     const { status, message } = NotFoundError();
     res.status(status).send(message);
-    return;
 });
 
 export default app;
