@@ -12,27 +12,38 @@
 #### Local Setup
 
 1. Clone the repository
-2. Install dependencies:
+2. Install API dependencies:
    ```bash
    cd api
    npm install
    ```
 3. Create a `.env` file with the following variables:
    ```
-   DATABASE_URL=mongodb://localhost:27017/ai-snipper
+   DATABASE_URL=mongodb://localhost:27017/ai-snippet
    OPENAI_API_KEY=your_openai_api_key_here
+   ```
+4. Install UI dependencies:
+   ```bash
+   cd ../ui
+   npm install
+   ```
+5. Create a `.env` file with the following variables:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8080
    ```
 
 #### Docker Setup
 
 1. Ensure Docker and Docker Compose are installed
-2. Create a `.env` file as described above
+2. Create the API `.env` file as described above
 3. Run:
    ```bash
    docker-compose up --build
    ```
 
 ### Environment Variables
+
+#### API
 
 **Required**
 
@@ -48,6 +59,25 @@
 - `DB_MIN_POOL_SIZE`: MongoDB min connection pool size (default: 1)
 - `DB_SOCKET_TIMEOUT_MS`: MongoDB socket timeout (default: 45000)
 - `DB_SERVER_SELECTION_TIMEOUT_MS`: MongoDB server selection timeout (default: 5000)
+
+#### UI
+
+- `NEXT_PUBLIC_API_URL`: API URL
+
+### Obtaining OpenAI API Key
+
+1. Visit [OpenAI Platform](https://platform.openai.com/)
+2. Create an account or log in
+3. Navigate to API Keys section
+4. Generate a new secret key
+5. Copy the key and use it in the `OPENAI_API_KEY` environment variable
+
+### Running Tests
+
+```bash
+cd api
+npm test
+```
 
 ### API Endpoints
 
@@ -117,31 +147,6 @@
       }
     ]
     ```
-
-### Running Tests
-
-#### Local Testing
-
-```bash
-cd api
-npm test
-```
-
-#### Docker Testing
-
-```bash
-docker-compose run api npm test
-```
-
-### Obtaining API Keys
-
-#### OpenAI API Key
-
-1. Visit [OpenAI Platform](https://platform.openai.com/)
-2. Create an account or log in
-3. Navigate to API Keys section
-4. Generate a new secret key
-5. Copy the key and use it in the `OPENAI_API_KEY` environment variable
 
 ### License
 
